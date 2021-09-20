@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessing the Webcam</title>
+
+    <style>
+      #container {
+        width: 500px;
+        height: 375px;
+        border: 1px #000 solid;
+      }
+      #videoElement {
+        width: 500px;
+        height: 375px;
+        background-color: #666;
+      }
+      button {
+        margin-top: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px;
+        background-color: white;
+        border: 1px solid black;
+      }
+      button:hover {
+        background-color: lightgray;
+      }
+
+      button:active {
+        background-color: darkgray;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <video autoplay="true" id="videoElement"></video>
+    </div>
+    <button id="stop">Stop Video</button>
+    <script>
+      var video = document.querySelector("#videoElement");
+      var stopVideo = document.querySelector("#stop");
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ audio: true, video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+          })
+          .catch(function (err0r) {
+            console.log("Something went wrong!");
+          });
+      }
+      stopVideo.addEventListener("click", stop, false);
+      function stop(e) {
+        var stream = video.srcObject;
+        var tracks = stream.getTracks();
+
+        for (var i = 0; i < tracks.length; i++) {
+          var track = tracks[i];
+          track.stop();
+        }
+
+        video.srcObject = null;
+      }
+    </script>
+  </body>
+</html>
